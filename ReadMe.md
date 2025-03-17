@@ -37,12 +37,6 @@ If you have any issues or feature requests, contact us at [justpkdev.vercel.app]
 
 ---
 
-## Version 1.0.0  
--  Initial Release  
--  Backup, Download, Restore, and Delete features added  
-
----
-
 ### 100% Free | No Limitations | No Premium Version  
 
 ---
