@@ -6,7 +6,8 @@
 // Version: 1.0.0
 // Author: JustPkDev
 // Author URI: https://justpkdev.vercel.app
-// License: GPL2
+// License: GPLv2 or later
+// License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 if (!defined('ABSPATH')) exit;
 

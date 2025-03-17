@@ -1,3 +1,10 @@
+=== Plugin Name ===
+Contributors: justpkdev
+Icon URL: assets/images/migration.png
+
+== License ==
+GPLv2 or later
+
 Just WP Migrate
 
 Description:
