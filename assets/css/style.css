@@ -1,0 +1,48 @@
+/* main css */
+
+body {
+  background: #f0f0f1 !important;
+  background-color: #f0f0f1 !important;
+  color: #3c434a !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif !important;
+  font-size: 13px !important;
+  line-height: 1.4em !important;
+  min-width: 600px !important;
+}
+
+.btn-css-create {
+  height: 30px;
+  padding: 0 10px;
+  font-size: 12px;
+  margin-top: 5px;
+  transition: 0.5s ease;
+  background-color: #0095d4;
+}
+
+.btn-css-create:hover {
+  background-color: #0070a0;
+}
+
+.loader {
+  width: 60px;
+  aspect-ratio: 2;
+  --_g: no-repeat radial-gradient(circle closest-side, #000 90%, #0000);
+  background: var(--_g) 0% 50%, var(--_g) 50% 50%, var(--_g) 100% 50%;
+  background-size: calc(100% / 3) 50%;
+  animation: l3 1s infinite linear;
+}
+@keyframes l3 {
+  20% {
+    background-position: 0% 0%, 50% 50%, 100% 50%;
+  }
+  40% {
+    background-position: 0% 100%, 50% 0%, 100% 50%;
+  }
+  60% {
+    background-position: 0% 50%, 50% 100%, 100% 0%;
+  }
+  80% {
+    background-position: 0% 50%, 50% 50%, 100% 100%;
+  }
+}
