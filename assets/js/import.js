@@ -80,8 +80,8 @@ const upload = (file) => {
   formData.append("file", file);
 
   xhr.onload = () => {
+    // console.log(xhr.responseText);
     const res = JSON.parse(xhr.responseText);
-    // console.log(res);
     if (res.success) {
       Swal.fire({
         icon: "success",

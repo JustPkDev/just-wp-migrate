@@ -4,13 +4,11 @@
 $backups = [];
 $files = scandir(JWM_BACKUP_FOLDER);
 
-$files = scandir(JWM_BACKUP_FOLDER);
-
 foreach ($files as $file) {
     if (pathinfo($file, PATHINFO_EXTENSION) === 'jwm') {
         $size = filesize(JWM_BACKUP_FOLDER . $file);
         $formattedSize = formatSize($size);
-        $date = date("Y-m-d H:i:s", filemtime(JWM_BACKUP_FOLDER . $file));
+        $date = gmdate("Y-m-d H:i:s", filemtime(JWM_BACKUP_FOLDER . $file));
 
         $backups[] = [
             'name' => $file,
@@ -38,7 +36,7 @@ if (count($backups) > 0) {
             <div class="d-flex justify-content-between">
                 <div class="d-flex align-items-center justify-content-center">
                     <img
-                        src="<?php echo JWM_PLUGIN_URL . 'assets/images/backup.png' ?>"
+                        src="<?php echo esc_url(JWM_PLUGIN_URL) . 'assets/images/backup.png' ?>"
                         alt="justpkdev"
                         style="width: 35px; height: 35px;">
                     <h5 class="mt-2 ms-2">Backups</h5>
@@ -60,10 +58,10 @@ if (count($backups) > 0) {
                         <tbody class="table-group-divider">
                             <?php foreach ($backups as $file): ?>
                                 <tr>
-                                    <th scope="row"><?php echo $i ?></th>
-                                    <td><?php echo $file['name'] ?></td>
-                                    <td><?php echo $file['date'] ?></td>
-                                    <td><?php echo $file['size'] ?></td>
+                                    <th scope="row"><?php echo intval($i) ?></th>
+                                    <td><?php echo esc_html($file['name']) ?></td>
+                                    <td><?php echo esc_html($file['date']) ?></td>
+                                    <td><?php echo esc_html($file['size']) ?></td>
                                     <td class="position-relative">
                                         <button class="btn btn-toolbar px-1 dots" data-open="false">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
@@ -71,7 +69,7 @@ if (count($backups) > 0) {
                                             </svg>
                                         </button>
                                         <div class="position-absolute d-flex flex-column overflow-hidden rounded d-none dropdown-js z-3"
-                                            style="right: 0px;" data-name="<?php echo $file['name'] ?>">
+                                            style="right: 0px;" data-name="<?php echo esc_attr($file['name']) ?>">
                                             <button
                                                 class="btn btn-css-create mt-0 rounded-0 px-3 text-white border-bottom restore"
                                                 style="font-size: 14px; height: 35px;">
@@ -79,7 +77,7 @@ if (count($backups) > 0) {
                                             </button>
                                             <button
                                                 class="btn btn-css-create mt-0 rounded-0 px-3 text-white border-bottom download"
-                                                style="font-size: 14px; height: 35px;" data-path="<?php echo JWM_BACKUP_URL ?>">
+                                                style="font-size: 14px; height: 35px;" data-path="<?php echo esc_url(JWM_BACKUP_URL) ?>">
                                                 download
                                             </button>
                                             <button

@@ -7,7 +7,7 @@ class Links
     {
         wp_enqueue_style(
             'jwp-migrate-bootstrap-css',
-            'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css'
+            JWM_PLUGIN_URL . 'assets/bootstrap/css/bootstrap.min.css'
         );
 
         wp_enqueue_style(
@@ -16,9 +16,14 @@ class Links
             ['jwp-migrate-bootstrap-css']
         );
 
+        wp_enqueue_style(
+            'jwp-migrate-sweetalert-css',
+            JWM_PLUGIN_URL . 'assets/sweetalert/sweetalert2.min.css'
+        );
+
         wp_enqueue_script(
             'jwp-migrate-bootstrap-script',
-            "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js",
+            JWM_PLUGIN_URL . 'assets/bootstrap/js/bootstrap.bundle.min.js',
             ['jquery'],
             null,
             true
@@ -34,7 +39,7 @@ class Links
 
         wp_enqueue_script(
             'jwp-migrate-sweetalert-script',
-            "https://cdn.jsdelivr.net/npm/sweetalert2@11",
+            JWM_PLUGIN_URL . 'assets/sweetalert/sweetalert2.min.js',
             ['jquery', 'jwp-migrate-bootstrap-script'],
             null,
             true
