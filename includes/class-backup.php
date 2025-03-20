@@ -192,17 +192,20 @@ class Backup
 
     public static function replace_old_site($extractedPath)
     {
+        global $wp_filesystem;
+
         if (!function_exists('WP_Filesystem')) {
             require_once ABSPATH . 'wp-admin/includes/file.php';
         }
 
         WP_Filesystem();
-        global $wp_filesystem;
+
         $wpContent = WP_CONTENT_DIR;
 
         $skipFolders = [
-            'plugins/just-wp-migrate',
-            basename(JWM_BACKUP_FOLDER)
+            basename(JWM_BACKUP_FOLDER),
+            basename(ABSPATH . '/wp-content/plugins/'),
+            basename(ABSPATH . '/wp-content/plugins/just-wp-migrate/')
         ];
 
         $files = new RecursiveIteratorIterator(
@@ -212,13 +215,15 @@ class Backup
 
         foreach ($files as $file) {
             $filePath = str_replace('\\', '/', $file->getRealPath());
+
             foreach ($skipFolders as $skip) {
                 if (strpos($filePath, $skip) !== false) {
                     continue 2;
                 }
             }
+
             if ($file->isDir()) {
-                $wp_filesystem->delete($filePath, true);
+                $wp_filesystem->rmdir($filePath, true);
             } else {
                 $wp_filesystem->delete($filePath);
             }
@@ -247,29 +252,39 @@ class Backup
 
     public static function import_database($extractedPath)
     {
-        global $wpdb;
-        $databasePath = $extractedPath . '/database.sql';
+        global $wpdb, $wp_filesystem;
 
-        if (!file_exists($databasePath)) {
+        if (!function_exists('WP_Filesystem')) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+        }
+
+        WP_Filesystem();
+
+        $databasePath = rtrim($extractedPath, '/') . '/database.sql';
+
+        $sql = $wp_filesystem->get_contents($databasePath);
+        if (!$sql) {
             return false;
         }
 
-        $sql = file_get_contents($databasePath);
         $newUrl = get_site_url();
-        preg_match('/--\s*OLD_URL=(.+)/', $sql, $matches);
-        $oldUrl = $matches[1] ?? null;
 
-        if (!$oldUrl) {
+        if (preg_match('/--\s*OLD_URL\s*=\s*(.+)/i', $sql, $matches)) {
+            $oldUrl = trim($matches[1]);
+            $sql = str_replace($oldUrl, $newUrl, $sql);
+        } else {
             return false;
         }
 
-        $sql = str_replace($oldUrl, $newUrl, $sql);
-        $queries = explode(";\n", $sql);
+        $queries = preg_split('/;\s*\n/', $sql, -1, PREG_SPLIT_NO_EMPTY);
 
         foreach ($queries as $query) {
             $query = trim($query);
             if (!empty($query)) {
-                $wpdb->query($wpdb->prepare("%s", $query));
+                if (preg_match('/\?/', $query)) {
+                    $query = $wpdb->prepare($query);
+                }
+                $wpdb->query($query);
             }
         }
 
@@ -381,6 +396,13 @@ class Backup
     public static function restore_file_ajax()
     {
         $instance = new self();
+        global $wp_filesystem;
+
+        if (!function_exists('WP_Filesystem')) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+        }
+
+        WP_Filesystem();
 
         // Security Check
         check_ajax_referer('jwm_backup_nonce', 'nonce');
@@ -431,8 +453,11 @@ class Backup
         $instance->send_progress('Finshing', 90);
 
         // css
-        $css = file_get_contents($ext_path . '/style.css');
-        wp_update_custom_css_post($css);
+        $css = $wp_filesystem->get_contents($ext_path . '/style.css');
+
+        if ($css !== false) {
+            wp_update_custom_css_post($css);
+        }
 
         // clear cache
         clearstatcache();
